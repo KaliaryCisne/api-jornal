@@ -10,6 +10,7 @@
         "darkaonline/swagger-lume": "~7.0",
         "laravel/lumen-framework": "7.2.2",
         "tymon/jwt-auth": "^1.0",
+        "urameshibr/lumen-form-request": "^1.5",
         "zircote/swagger-php": "3.*"
     },
     "require-dev": {

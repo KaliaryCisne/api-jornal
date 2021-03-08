@@ -3,8 +3,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\News\NewsRegisterRequest;
+use App\Http\Requests\News\NewsUpdateRequest;
 use App\News;
-use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
@@ -62,20 +63,9 @@ class NewsController extends Controller
      *   ),
      *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
      * ),
-     * @param  Request  $request
      */
-    public function create(Request $request)
+    public function create(NewsRegisterRequest $request)
     {
-        //todo: Trocar esses validates para middlewares
-
-        /** validate incoming request */
-        $this->validate($request, [
-            'type_news_id' => 'required|integer|exists:type_news,id',
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'body' => 'required|string'
-        ]);
-
         try
         {
             $news = new News();
@@ -161,19 +151,9 @@ class NewsController extends Controller
      *   ),
      *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
      * ),
-     * @param  Request  $request
      */
-    public function update(Request $request, $id)
+    public function update(NewsUpdateRequest $request, $id)
     {
-        //validate incoming request
-        $this->validate($request, [
-            'type_news_id' => 'integer',
-            'title' => 'string',
-            'description' => 'string',
-            'body' => 'string',
-            'image_link' => 'string',
-        ]);
-
         try {
             $type = News::findOrFail($id);
             $data = $request->all();
@@ -193,7 +173,6 @@ class NewsController extends Controller
                 'message' => $e->getMessage(),
             ], 500);
         }
-
     }
 
     /**
