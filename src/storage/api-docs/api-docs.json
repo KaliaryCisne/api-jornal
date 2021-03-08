@@ -1,0 +1,479 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Api para Jornal",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Jornalista"
+                ],
+                "summary": "Rota para criação de jornalistas.",
+                "description": "Cria um jornalista.",
+                "operationId": "App\\Http\\Controllers\\AuthController::register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "description": "Primeiro nome.",
+                                        "type": "string"
+                                    },
+                                    "last_name": {
+                                        "description": "Sobrenome.",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "Email do jornalista, será utilizado como login.",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "Senha.",
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Confirmação da senha.",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "{status:'success', data:'jornalista criado com sucesso!'}"
+                    },
+                    "500": {
+                        "description": "{status:'error', data:null, message:'Menssagem de erro'}"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Jornalista"
+                ],
+                "summary": "Rota para autenticar um jornalista.",
+                "description": "Realiza o login e devolve um Token ( JWT ) que expira em 5 minutos.",
+                "operationId": "App\\Http\\Controllers\\AuthController::login",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "email utilizado para se registrar.",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "Senha informado no registro.",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "{status:'success',\n          data:'{token: hash, token_type: 'bearer,' expire_in: 'tempo de expiração do token'}'}"
+                    },
+                    "401": {
+                        "description": "{status:'fail', data:null, message:'Email ou senha incorretos'}"
+                    }
+                }
+            }
+        },
+        "/api/me": {
+            "get": {
+                "tags": [
+                    "Jornalista"
+                ],
+                "summary": "Rota para visualizar os dados do jornalista autenticado.",
+                "description": "Retorna os dados do jornalista autenticado.",
+                "operationId": "App\\Http\\Controllers\\AuthController::me",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:'success',\n            data:{'id': 1,\n                'first_name': 'Kaliary',\n                'last_name': 'Cisne',\n                'email': 'kaliarycisne@gmail.com',\n                'created_at': '2021-03-08T00:17:28.000000Z',\n                'updated_at': '2021-03-08T00:17:28.000000Z'\n           }"
+                    }
+                }
+            }
+        },
+        "/api/news/create": {
+            "post": {
+                "tags": [
+                    "Notícias"
+                ],
+                "summary": "Rota para criar uma notícia.",
+                "description": "Cria uma nova notícia.",
+                "operationId": "App\\Http\\Controllers\\NewsController::create",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "type_news_id": {
+                                        "description": "Id do tipo de notícia.",
+                                        "type": "integer"
+                                    },
+                                    "title": {
+                                        "description": "Título da notícia.",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Descrição da notícia.",
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "description": "Corpo da notícia.",
+                                        "type": "string"
+                                    },
+                                    "image_link": {
+                                        "description": "Imagem.",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "{status:'success', data:'Notícia criada com sucesso!'}"
+                    },
+                    "500": {
+                        "description": "{status:'error', data:null, message:'Mensagem de erro'}"
+                    }
+                }
+            }
+        },
+        "/api/news/update/{id}": {
+            "post": {
+                "tags": [
+                    "Notícias"
+                ],
+                "summary": "Rota para atualizar uma notícia.",
+                "description": "Atualiza uma nova notícia.",
+                "operationId": "App\\Http\\Controllers\\NewsController::update",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id da notícia",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "type_news_id": {
+                                        "description": "Id do tipo de notícia.",
+                                        "type": "integer"
+                                    },
+                                    "title": {
+                                        "description": "Título da notícia.",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Descrição da notícia.",
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "description": "Corpo da notícia.",
+                                        "type": "string"
+                                    },
+                                    "image_link": {
+                                        "description": "Imagem.",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "{status:'success', data:'Notícia atualizada com sucesso!'}"
+                    },
+                    "500": {
+                        "description": "{status:'error', data:null, message:'Mensagem de erro'}"
+                    }
+                }
+            }
+        },
+        "/api/news/delete/{id}": {
+            "post": {
+                "tags": [
+                    "Notícias"
+                ],
+                "summary": "Rota para remover uma notícia.",
+                "description": "remove uma notícia.",
+                "operationId": "App\\Http\\Controllers\\NewsController::delete",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id da notícia",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "{status:'success', data:'Notícia removida com sucesso!'}"
+                    },
+                    "500": {
+                        "description": "{status:'error', data:null, message:'Mensagem de erro'}"
+                    }
+                }
+            }
+        },
+        "/api/news/type/{id}": {
+            "get": {
+                "tags": [
+                    "Notícias"
+                ],
+                "summary": "Rota para visualizar os todos os tipos de notícias do jornalista autenticado por um tipo.",
+                "description": "Retorna todos os tipos de notícias do jornalista autenticado por um tipo.",
+                "operationId": "App\\Http\\Controllers\\NewsController::findNewsByTypeId",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id da notícia",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:'success',\n            data:{\n                'id: 4,\n                user_id: 1,\n                type_news_id: 3,\n                title: Título da notícia,\n                description: Descrição aqui,\n                body: Corpo aqui,\n                image_link: null,\n                created_at: 2021-03-08T01:40:37.000000Z,\n                updated_at: 2021-03-08T01:40:37.000000Z\n            }"
+                    }
+                }
+            }
+        },
+        "/api/news/me": {
+            "get": {
+                "tags": [
+                    "Notícias"
+                ],
+                "summary": "Rota para visualizar os todos os tipos de notícias do jornalista autenticado.",
+                "description": "Retorna todos os tipos de notícias do jornalista autenticado.",
+                "operationId": "App\\Http\\Controllers\\NewsController::me",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:'success',\n            data:{\n                'id: 4,\n                user_id: 1,\n                type_news_id: 3,\n                title: Título da notícia,\n                description: Descrição aqui,\n                body: Corpo aqui,\n                image_link: null,\n                created_at: 2021-03-08T01:40:37.000000Z,\n                updated_at: 2021-03-08T01:40:37.000000Z\n            }"
+                    }
+                }
+            }
+        },
+        "/api/type/create": {
+            "post": {
+                "tags": [
+                    "Tipos de notícias"
+                ],
+                "summary": "Rota para criar um tipo de notícia.",
+                "description": "Cria um novo tipo de notícia.",
+                "operationId": "App\\Http\\Controllers\\TypeNewsController::create",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "description": "Tipo da notícia.",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "{status:'success', data:'Tipo criado com sucesso!'}"
+                    },
+                    "500": {
+                        "description": "{status:'error', data:null, message:'Mensagem de erro'}"
+                    }
+                }
+            }
+        },
+        "/api/type/update/{id}": {
+            "post": {
+                "tags": [
+                    "Tipos de notícias"
+                ],
+                "summary": "Rota para atualizar um tipo de notícia.",
+                "description": "Atualiza um tipo de notícia.",
+                "operationId": "App\\Http\\Controllers\\TypeNewsController::update",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id do tipo da notícia",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "properties": {
+                                    "type": {
+                                        "description": "Tipo da notícia.",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "{status:'success', data:'Tipo atualizado com sucesso!'}"
+                    },
+                    "500": {
+                        "description": "{status:'error', data:null, message:'Mensagem de erro'}"
+                    }
+                }
+            }
+        },
+        "/api/type/delete/{id}": {
+            "post": {
+                "tags": [
+                    "Tipos de notícias"
+                ],
+                "summary": "Rota para remover um tipo de notícia.",
+                "description": "Remove um tipo de notícia.",
+                "operationId": "App\\Http\\Controllers\\TypeNewsController::delete",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Id do tipo da notícia",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:'success', data:'Tipo removido com sucesso!'}"
+                    },
+                    "500": {
+                        "description": "{status:'error', data:null, message:'Mensagem de erro'}"
+                    }
+                }
+            }
+        },
+        "/api/type/me": {
+            "get": {
+                "tags": [
+                    "Tipos de notícias"
+                ],
+                "summary": "Rota para visualizar os todos os tipos de notícias do jornalista autenticado.",
+                "description": "Retorna todos os tipos de notícias do jornalista autenticado.",
+                "operationId": "App\\Http\\Controllers\\TypeNewsController::me",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Bearer ",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{status:'success',\n            data:{\n                'id': 1,\n                'user_id': '1',\n                'type': 'Esportes',\n                'created_at': '2021-03-08T00:17:28.000000Z',\n                'updated_at': '2021-03-08T00:17:28.000000Z'\n            }"
+                    }
+                }
+            }
+        }
+    }
+}

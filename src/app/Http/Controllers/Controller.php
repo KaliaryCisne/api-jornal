@@ -14,9 +14,11 @@ class Controller extends BaseController
     {
         return response()->json([
             'status' => 'success',
-            'token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => env('JWT_TTL') . " minutos"
+            'data'   => [
+                'token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => env('JWT_TTL') . " minutos"
+            ]
         ], 200);
     }
 }

@@ -15,7 +15,34 @@ class TypeNewsController extends Controller
     }
 
     /**
-     * Cria um tipo de notícia.
+     * @OA\Post(path="/api/type/create",
+     *   tags={"Tipos de notícias"},
+     *   summary="Rota para criar um tipo de notícia.",
+     *   description="Cria um novo tipo de notícia.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="application/x-www-form-urlencoded",
+     *       @OA\Schema(
+     *         @OA\Property(
+     *           property="type",
+     *           description="Tipo da notícia.",
+     *           type="string",
+     *         ),
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(response="201",
+     *     description="{status:'success', data:'Tipo criado com sucesso!'}"
+     *   ),
+     *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
+     * ),
      * @param  Request  $request
      */
     public function create(Request $request)
@@ -43,29 +70,49 @@ class TypeNewsController extends Controller
         catch (\Exception $e)
         {
             return response()->json([
-                'status' => 'false',
-                'data' => $e->getMessage(),
+                'status' => 'error',
+                'data' => null,
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
 
     /**
-     * Busca os tipos de notícias pertencentes a um jornalista
+     * @OA\Post(path="/api/type/update/{id}",
+     *   tags={"Tipos de notícias"},
+     *   summary="Rota para atualizar um tipo de notícia.",
+     *   description="Atualiza um tipo de notícia.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Id do tipo da notícia",
+     *     required=true,
+     *   ),
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="application/x-www-form-urlencoded",
+     *       @OA\Schema(
+     *         @OA\Property(
+     *           property="type",
+     *           description="Tipo da notícia.",
+     *           type="string",
+     *         ),
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(response="200",
+     *     description="{status:'success', data:'Tipo atualizado com sucesso!'}"
+     *   ),
+     *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
+     * ),
      * @param  Request  $request
-     */
-    public function me()
-    {
-        return response()->json([
-            'status' => 'success',
-            'data' => auth()->user()->typeNews
-        ]);
-    }
-
-    /**
-     * Atualiza um tipo de notícia
-     * @param Request $request
-     * @param $id
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, $id)
     {
@@ -81,7 +128,7 @@ class TypeNewsController extends Controller
 
             return response()->json( [
                 'status' => 'success',
-                'data' => 'Tipo atualizado com sucesso',
+                'data' => 'Tipo atualizado com sucesso!',
             ], 200);
 
         }
@@ -89,16 +136,36 @@ class TypeNewsController extends Controller
         {
             return response()->json( [
                 'status' => 'error',
-                'data' => $e->getMessage(),
+                'data'   => null,
+                'message' => $e->getMessage(),
             ], 500);
         }
 
     }
 
     /**
-     * Exclui um tipo de notícia
-     * @param $id
-     * @throws \Illuminate\Validation\ValidationException
+     * @OA\Post(path="/api/type/delete/{id}",
+     *   tags={"Tipos de notícias"},
+     *   summary="Rota para remover um tipo de notícia.",
+     *   description="Remove um tipo de notícia.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Id do tipo da notícia",
+     *     required=true,
+     *   ),
+     *   @OA\Response(response="200",
+     *     description="{status:'success', data:'Tipo removido com sucesso!'}"
+     *   ),
+     *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
+     * ),
+     * @param  Request  $request
      */
     public function delete($id)
     {
@@ -122,10 +189,43 @@ class TypeNewsController extends Controller
         {
             return response()->json( [
                 'status' => 'error',
-                'data' => $e->getMessage(),
+                'data'  => null,
+                'message' => $e->getMessage(),
             ], 500);
         }
 
+    }
+
+    /**
+     * @OA\Get(path="/api/type/me",
+     *   tags={"Tipos de notícias"},
+     *   summary="Rota para visualizar os todos os tipos de notícias do jornalista autenticado.",
+     *   description="Retorna todos os tipos de notícias do jornalista autenticado.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\Response(response="200",
+     *     description="{status:'success',
+            data:{
+                'id': 1,
+                'user_id': '1',
+                'type': 'Esportes',
+                'created_at': '2021-03-08T00:17:28.000000Z',
+                'updated_at': '2021-03-08T00:17:28.000000Z'
+            }"
+     *   ),
+     * ),
+     * @param  Request  $request
+     */
+    public function me()
+    {
+        return response()->json([
+            'status' => 'success',
+            'data' => auth()->user()->typeNews
+        ]);
     }
 
 }
