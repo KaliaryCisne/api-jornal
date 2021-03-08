@@ -14,13 +14,59 @@ class NewsController extends Controller
     }
 
     /**
-     * Cria uma notícia.
+     * @OA\Post(path="/api/news/create",
+     *   tags={"Notícias"},
+     *   summary="Rota para criar uma notícia.",
+     *   description="Cria uma nova notícia.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="application/x-www-form-urlencoded",
+     *       @OA\Schema(
+     *         @OA\Property(
+     *           property="type_news_id",
+     *           description="Id do tipo de notícia.",
+     *           type="integer",
+     *         ),
+     *         @OA\Property(
+     *           property="title",
+     *           description="Título da notícia.",
+     *           type="string",
+     *         ),
+     *         @OA\Property(
+     *           property="description",
+     *           description="Descrição da notícia.",
+     *           type="string",
+     *         ),
+     *         @OA\Property(
+     *           property="body",
+     *           description="Corpo da notícia.",
+     *           type="string",
+     *         ),
+     *         @OA\Property(
+     *           property="image_link",
+     *           description="Imagem.",
+     *           type="string",
+     *         ),
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(response="201",
+     *     description="{status:'success', data:'Notícia criada com sucesso!'}"
+     *   ),
+     *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
+     * ),
      * @param  Request  $request
      */
     public function create(Request $request)
     {
         //todo: Trocar esses validates para middlewares
-        //todo: verificar se barra a criação de uma notícia cujo o tipo nao existe na tabela de tipos
 
         /** validate incoming request */
         $this->validate($request, [
@@ -54,28 +100,68 @@ class NewsController extends Controller
         {
             return response()->json([
                 'status' => 'error',
-                'data' => $e->getMessage(),
+                'data' => null,
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
 
     /**
-     * Lista todas as notícias de um jornalista
+     * @OA\Post(path="/api/news/update/{id}",
+     *   tags={"Notícias"},
+     *   summary="Rota para atualizar uma notícia.",
+     *   description="Atualiza uma nova notícia.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Id da notícia",
+     *     required=true,
+     *   ),
+     *   @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="application/x-www-form-urlencoded",
+     *       @OA\Schema(
+     *         @OA\Property(
+     *           property="type_news_id",
+     *           description="Id do tipo de notícia.",
+     *           type="integer",
+     *         ),
+     *         @OA\Property(
+     *           property="title",
+     *           description="Título da notícia.",
+     *           type="string",
+     *         ),
+     *         @OA\Property(
+     *           property="description",
+     *           description="Descrição da notícia.",
+     *           type="string",
+     *         ),
+     *         @OA\Property(
+     *           property="body",
+     *           description="Corpo da notícia.",
+     *           type="string",
+     *         ),
+     *         @OA\Property(
+     *           property="image_link",
+     *           description="Imagem.",
+     *           type="string",
+     *         ),
+     *       ),
+     *     ),
+     *   ),
+     *   @OA\Response(response="201",
+     *     description="{status:'success', data:'Notícia atualizada com sucesso!'}"
+     *   ),
+     *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
+     * ),
      * @param  Request  $request
-     */
-    public function me()
-    {
-        return response()->json([
-            'status' => 'success',
-            'data' => auth()->user()->news
-        ]);
-    }
-
-    /**
-     * Atualiza uma notícia
-     * @param Request $request
-     * @param $id
-     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, $id)
     {
@@ -103,16 +189,35 @@ class NewsController extends Controller
         {
             return response()->json([
                 'status' => 'error',
-                'data' => $e->getMessage(),
+                'data' => null,
+                'message' => $e->getMessage(),
             ], 500);
         }
 
     }
 
     /**
-     * Exclui uma notícia
-     * @param $id
-     * @throws \Illuminate\Validation\ValidationException
+     * @OA\Post(path="/api/news/delete/{id}",
+     *   tags={"Notícias"},
+     *   summary="Rota para remover uma notícia.",
+     *   description="remove uma notícia.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Id da notícia",
+     *     required=true,
+     *   ),
+     *   @OA\Response(response="201",
+     *     description="{status:'success', data:'Notícia removida com sucesso!'}"
+     *   ),
+     *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
+     * ),
      */
     public function delete($id)
     {
@@ -122,7 +227,7 @@ class NewsController extends Controller
 
             return response()->json([
                 'stauts' => 'success',
-                'data' => 'Notícia removida com sucesso',
+                'data' => 'Notícia removida com sucesso!',
             ], 200);
 
         }
@@ -130,21 +235,86 @@ class NewsController extends Controller
         {
             return response()->json( [
                 'status' => 'error',
-                'data' => $e->getMessage(),
+                'data' => null,
+                'message' => $e->getMessage(),
             ], 500);
         }
 
     }
 
     /**
-     * Retorna todas as notícias de um tipo
-     * @param $id
+     * @OA\Get(path="/api/news/type/{id}",
+     *   tags={"Notícias"},
+     *   summary="Rota para visualizar os todos os tipos de notícias do jornalista autenticado por um tipo.",
+     *   description="Retorna todos os tipos de notícias do jornalista autenticado por um tipo.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Id da notícia",
+     *     required=true,
+     *   ),
+     *   @OA\Response(response="200",
+     *     description="{status:'success',
+            data:{
+                'id: 4,
+                user_id: 1,
+                type_news_id: 3,
+                title: Título da notícia,
+                description: Descrição aqui,
+                body: Corpo aqui,
+                image_link: null,
+                created_at: 2021-03-08T01:40:37.000000Z,
+                updated_at: 2021-03-08T01:40:37.000000Z
+            }"
+     *   ),
+     * ),
      */
     public function findNewsByTypeId($id)
     {
         return response()->json([
             'status' => 'success',
             'data' => auth()->user()->typeNews->where('id', $id)->first()->news,
+        ]);
+    }
+
+    /**
+     * @OA\Get(path="/api/news/me",
+     *   tags={"Notícias"},
+     *   summary="Rota para visualizar os todos os tipos de notícias do jornalista autenticado.",
+     *   description="Retorna todos os tipos de notícias do jornalista autenticado.",
+     *   @OA\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Bearer ",
+     *     required=true,
+     *   ),
+     *   @OA\Response(response="200",
+     *     description="{status:'success',
+            data:{
+                'id: 4,
+                user_id: 1,
+                type_news_id: 3,
+                title: Título da notícia,
+                description: Descrição aqui,
+                body: Corpo aqui,
+                image_link: null,
+                created_at: 2021-03-08T01:40:37.000000Z,
+                updated_at: 2021-03-08T01:40:37.000000Z
+            }"
+     *   ),
+     * ),
+     */
+    public function me()
+    {
+        return response()->json([
+            'status' => 'success',
+            'data' => auth()->user()->news
         ]);
     }
 
