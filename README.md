@@ -119,3 +119,7 @@ Abaixo, segue os recursos para a utilização da api:
     </li>
 </ul>
 </strong>
+
+## SWAGGER
+
+Documentação da api no Swagger: <a style="color: white; background-color: #6f42c1; padding: 3px">host</a>/swagger
