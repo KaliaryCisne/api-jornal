@@ -3,10 +3,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\UserLoginRequest;
+use App\Http\Requests\Auth\UserRegisterRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\User;
-use mysql_xdevapi\Exception;
 
 class AuthController extends Controller
 {
@@ -56,16 +56,9 @@ class AuthController extends Controller
      *   @OA\Response(response="201", description="{status:'success', data:'jornalista criado com sucesso!'}"),
      *   @OA\Response(response="500", description="{status:'error', data:null, message:'Menssagem de erro'}")
      * ),
-     * @param  Request  $request
      */
-    public function register(Request $request)
+    public function register(UserRegisterRequest $request)
     {
-        //validate incoming request
-        $this->validate($request, [
-            'email' => 'required|string|unique:users',
-            'password' => 'required|confirmed',
-        ]);
-
         try
         {
             $user = new User;
@@ -126,16 +119,9 @@ class AuthController extends Controller
      *   ),
      *   @OA\Response(response="401", description="{status:'fail', data:null, message:'Email ou senha incorretos'}")
      * ),
-     * @param  Request  $request
      */
-    public function login(Request $request)
+    public function login(UserLoginRequest $request)
     {
-        //validate incoming request
-        $this->validate($request, [
-            'email' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
         $credentials = $request->only(['email', 'password']);
 
         if (! $token = Auth::attempt($credentials)) {
@@ -171,7 +157,6 @@ class AuthController extends Controller
            }"
      *   ),
      * ),
-     * @param  Request  $request
      */
     public function me()
     {
@@ -180,4 +165,5 @@ class AuthController extends Controller
             'data' => auth()->user()
         ]);
     }
+
 }

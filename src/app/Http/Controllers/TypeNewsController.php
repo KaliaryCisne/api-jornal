@@ -3,9 +3,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TypeNews\TypeRegisterRequest;
+use App\Http\Requests\TypeNews\TypeUpdateRequest;
 use App\TypeNews;
-use Illuminate\Http\Request;
-use Mockery\Exception;
 
 class TypeNewsController extends Controller
 {
@@ -43,16 +43,9 @@ class TypeNewsController extends Controller
      *   ),
      *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
      * ),
-     * @param  Request  $request
      */
-    public function create(Request $request)
+    public function create(TypeRegisterRequest $request)
     {
-        //todo: Trocar esses validates para middlewares
-        //validate incoming request
-        $this->validate($request, [
-            'type' => 'required|string',
-        ]);
-
         try
         {
             $user = new TypeNews();
@@ -65,7 +58,6 @@ class TypeNewsController extends Controller
                 'status' => 'success',
                 'data' => 'Tipo criado com sucesso!',
             ], 201);
-
         }
         catch (\Exception $e)
         {
@@ -112,21 +104,15 @@ class TypeNewsController extends Controller
      *   ),
      *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
      * ),
-     * @param  Request  $request
      */
-    public function update(Request $request, $id)
+    public function update(TypeUpdateRequest $request, $id)
     {
-        //validate incoming request
-        $this->validate($request, [
-            'type' => 'required|string',
-        ]);
-
         try {
             $type = TypeNews::findOrFail($id);
             $data = $request->all();
             $type->update($data);
 
-            return response()->json( [
+            return response()->json([
                 'status' => 'success',
                 'data' => 'Tipo atualizado com sucesso!',
             ], 200);
@@ -134,7 +120,7 @@ class TypeNewsController extends Controller
         }
         catch (\Exception $e)
         {
-            return response()->json( [
+            return response()->json([
                 'status' => 'error',
                 'data'   => null,
                 'message' => $e->getMessage(),
@@ -165,7 +151,6 @@ class TypeNewsController extends Controller
      *   ),
      *   @OA\Response(response="500", description="{status:'error', data:null, message:'Mensagem de erro'}")
      * ),
-     * @param  Request  $request
      */
     public function delete($id)
     {
@@ -174,7 +159,7 @@ class TypeNewsController extends Controller
 
             // Não permite que um tipo seja excluido estando atrelado a uma notícia
             if ($type->news->isNotEmpty()) {
-                throw new Exception("Este tipo está em uso em uma notícia e por isso não pode ser deletado.");
+                throw new \Exception("Este tipo está em uso em uma notícia e por isso não pode ser deletado.");
             }
 
             $type->delete();
@@ -218,7 +203,6 @@ class TypeNewsController extends Controller
             }"
      *   ),
      * ),
-     * @param  Request  $request
      */
     public function me()
     {
