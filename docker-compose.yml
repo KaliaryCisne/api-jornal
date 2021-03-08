@@ -1,0 +1,13 @@
+version: '3'
+services:
+  mysql:
+    env_file:
+      - ./docker/.env_mysql
+    network_mode: host
+    image: mysql:5.7
+    container_name: db_jornal
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+#    volumes:
+#      - ./../data-marketplace/:/var/lib/mysql
