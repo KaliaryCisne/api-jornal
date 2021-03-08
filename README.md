@@ -12,6 +12,7 @@ Abra um terminal e digite os comandos a seguir para baixar o projeto e suas depe
     <li><em> git clone https://github.com/KaliaryCisne/api-jornal.git</em></li>
     <li><em> cd api-jornal/src </em></li>
     <li><em> composer install </em></li>
+    <li><em> php artisan jwt:secret </em></li>
 </ul>
 
 ## CRIANDO UM BANCO DE DADOS:
@@ -39,7 +40,7 @@ Criado o banco e configurado o arquivo .env, é necessário rodas as migrations 
 </ul>
 
 
-## STARTANDO O SERVIDOR:
+## INICIANDO O SERVIDOR:
 
 Para subir o servidor de aplicação, basta abrir o terminal e digitar o seguinte comando dentro da pasta src:
 
